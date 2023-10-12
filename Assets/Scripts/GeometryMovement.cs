@@ -6,103 +6,117 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-// в файле строк < _size.x или столбцов < size.y
-
 public class GeometryMovement : MonoBehaviour
 {
+    [SerializeField] private string _fileName = "file.txt";
+    
     [SerializeField] private GameObject _prefab;
-    [SerializeField] private Vector2Int _size; //пока только на 3x3
-    [SerializeField] private List<Material> _materials;
+    [SerializeField] private int _matrixSize = 3;
 
-    // property blocks
-    //private MeshRenderer _meshRenderer;
+    [SerializeField] private Color _undefinedDigitColor = Color.white;
+    [SerializeField] private List<Color> _colors;
 
-    private List<List<int>> _field = new();
+    [SerializeField] private int _inputDelayMillis = 250;
+    
+    private MaterialPropertyBlock _materialPropertyBlock;
+
+    private readonly List<List<int>> _field = new();
     private GameObject[,] _prefabs;
-    private int[,] _currentField;
 
     private bool _blocked;
 
-    private int _currentRow;
-    private int _currentColumn;
+    private Vector2Int _matrixCenter;
+
+    private Vector2Int _fieldSize;
     
-    private void Awake()
+    private static readonly int ShaderColorId = Shader.PropertyToID("_Color");
+
+    private void Start()
     {
-        //_meshRenderer = new MeshRenderer();
+        _materialPropertyBlock = new();
+        _prefabs = new GameObject[_matrixSize, _matrixSize];
+        Execute();
     }
 
     private void Update()
     {
-        float vertical = Input.GetAxisRaw("Vertical");
-        float horizontal = Input.GetAxisRaw("Horizontal");
+        float rawStep = Input.GetAxisRaw("Vertical");
+        float columnStep = Input.GetAxisRaw("Horizontal");
         
-        if (_blocked || (vertical == 0 && horizontal == 0))
+        if (_blocked || (rawStep == 0 && columnStep == 0))
             return;
-
-        print($"Step: {vertical} {horizontal}");
         
-        TryUpdate(_currentRow - (int)vertical, _currentColumn + (int)horizontal);
-    }
-
-    private void Start()
-    {
-        _currentField = new int[_size.x, _size.y];
-        _prefabs = new GameObject[_size.x, _size.y];
-        Execute();
+        TryUpdate(_matrixCenter.y - (int)rawStep, _matrixCenter.x + (int)columnStep);
     }
 
     private void Execute()
     {
-        string filename = "file.txt";
-        using StreamReader reader = new StreamReader(filename);
+        using StreamReader reader = new StreamReader(_fileName);
         string line;
+        int column = 0;
         while ((line = reader.ReadLine()) != null)
         {
+            column++;
+            foreach (char character in line)
+            {
+                if (!(char.IsDigit(character) && character > '0'))
+                {
+                    throw new Exception($"{column}: all characters must be positive digits");
+                }
+            }
+            
+            if (line.Length == 0)
+            {
+                throw new Exception($"{column}: the raw must not be empty");
+            }
+                
+            if (_field.Count > 0 && _field[0].Count != line.Length)
+            {
+                throw new Exception($"{column}: the raws must have the same length");
+            }
+                
             List<int> list = line
                 .Select(number => Convert.ToInt32(Char.GetNumericValue(number)))
                 .ToList();
+                    
             _field.Add(list);
+        }
+        
+        _fieldSize = new Vector2Int(_field[0].Count, _field.Count);
+
+        if (_matrixSize % 2 == 0)
+        {
+            throw new Exception("the matrix size must be an odd number");
+        }
+        
+        if (_matrixSize > _fieldSize.x)
+        {
+            throw new Exception("There are more matrix columns than field columns");
+        }
+        
+        if (_matrixSize > _fieldSize.y)
+        {
+            throw new Exception("There are more matrix rows than field rows");
         }
 
         InstantiateCubes();
+
+        int rowIndex = Random.Range(0, _fieldSize.y);
+        int columnIndex = Random.Range(0, _fieldSize.x);
         
-        _currentRow = Random.Range(0, _field.Count);
-        _currentColumn = Random.Range(0, _field[0].Count);
-        
-        UpdateField(_currentRow, _currentColumn);
+        UpdateField(rowIndex, columnIndex);
     }
 
     private void InstantiateCubes()
     {
-        for (int i = 0; i < 3; i++)
+        int halfSize = _matrixSize / 2;
+        
+        for (int i = -halfSize; i <= halfSize; i++)
         {
-            for (int j = 0; j < 3; j++)
+            for (int j = -halfSize; j <= halfSize; j++)
             {
-                _prefabs[i, j] = Instantiate(_prefab, new Vector3(2 * j, 0, -2 * i), Quaternion.identity);
-            }
-        }
-    }
-
-    private void UpdateField(int row, int column)
-    {
-        string str = "";
-        // если 3x3
-        for (int i = -1; i <= 1; i++)
-        {
-            for (int j = -1; j <= 1; j++)
-            {
-                int normalized_i = ((row+i) % 3 + 3) % 3;
-                int normalized_j = ((column+j) % 8 + 8) % 8;
-
-                if (i == 0 && j == 0)
-                {
-                    _currentRow = normalized_i;
-                    _currentColumn = normalized_j;
-                    print($"Center: {_currentRow} {_currentColumn}");
-                }
-
-                _prefabs[1+i, 1+j].GetComponent<MeshRenderer>().material
-                    = _materials[_field[normalized_i][normalized_j] - 1];
+                _prefabs[halfSize+i, halfSize+j] =
+                    Instantiate(_prefab, new Vector3(2 * j, 0, -2 * i), Quaternion.identity);
             }
         }
     }
@@ -112,7 +126,43 @@ public class GeometryMovement : MonoBehaviour
         UpdateField(row, column);
         
         _blocked = true;
-        await Task.Delay(250);
+        await Task.Delay(_inputDelayMillis);
         _blocked = false;
+    }
+    
+    private void UpdateField(int row, int column)
+    {
+        int halfSize = _matrixSize / 2;
+        
+        for (int i = -halfSize; i <= halfSize; i++)
+        {
+            for (int j = -halfSize; j <= halfSize; j++)
+            {
+                int normalized_i = ((row+i) % _fieldSize.y + _fieldSize.y) % _fieldSize.y;
+                int normalized_j = ((column+j) % _fieldSize.x + _fieldSize.x) % _fieldSize.x;
+
+                if (i == 0 && j == 0)
+                {
+                    _matrixCenter.y = normalized_i;
+                    _matrixCenter.x = normalized_j;
+                }
+
+                int digit = _field[normalized_i][normalized_j];
+                Color newColor;
+                
+                if (digit > _colors.Count)
+                {
+                    Debug.LogError($"Color for {digit} is not defined");
+                    newColor = _undefinedDigitColor;
+                }
+                else
+                {
+                    newColor = _colors[digit - 1];
+                }
+                
+                _materialPropertyBlock.SetColor(ShaderColorId, newColor);
+                _prefabs[halfSize + i, halfSize + j].GetComponent<MeshRenderer>().SetPropertyBlock(_materialPropertyBlock);
+            }
+        }
     }
 }

@@ -330,13 +330,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6f6fdb114c530d4b82fb57d1bc27694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _fileName: file.txt
   _prefab: {fileID: 8222176399950324474, guid: 72bfe915f58208649ac06246d2804437, type: 3}
-  _size: {x: 3, y: 3}
-  _materials:
-  - {fileID: 2100000, guid: e5795369ca33a0944be59ede7cf9557b, type: 2}
-  - {fileID: 2100000, guid: 54de542ec0d2c5046808f2b91698a25d, type: 2}
-  - {fileID: 2100000, guid: 6429fa6b15a674640837f4a7da469423, type: 2}
-  - {fileID: 2100000, guid: e0590585cfd6c7941812b9a6021aeba9, type: 2}
+  _matrixSize: 3
+  _colors:
+  - {r: 0.8627451, g: 0.078431375, b: 0.23529412, a: 0}
+  - {r: 0.9411765, g: 0.9019608, b: 0.54901963, a: 0}
+  - {r: 0, g: 0, b: 0.8039216, a: 0}
+  - {r: 0.5019608, g: 0, b: 0.5019608, a: 0}
+  _inputDelayMillis: 250
 --- !u!4 &1823901911
 Transform:
   m_ObjectHideFlags: 0
