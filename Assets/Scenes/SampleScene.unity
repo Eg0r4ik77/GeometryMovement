@@ -123,6 +123,51 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &47933069
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 47933071}
+  - component: {fileID: 47933070}
+  m_Layer: 0
+  m_Name: FieldReader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &47933070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47933069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa0dcecaaa964d6a9bfc3f51ee20cb6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _fileName: file.txt
+--- !u!4 &47933071
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47933069}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.8113484, y: -10.410805, z: 22.12533}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -301,6 +346,52 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+--- !u!1 &1068387409
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1068387410}
+  - component: {fileID: 1068387411}
+  m_Layer: 0
+  m_Name: InputHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1068387410
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068387409}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.8113484, y: -10.410805, z: 22.12533}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1068387411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068387409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fff09524aa814ea38dd19991062badfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectMatrix: {fileID: 1823901910}
+  _inputDelayMillis: 250
 --- !u!1 &1823901909
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,7 +403,7 @@ GameObject:
   - component: {fileID: 1823901911}
   - component: {fileID: 1823901910}
   m_Layer: 0
-  m_Name: GeometryMovement
+  m_Name: ObjectMatrix
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -330,15 +421,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6f6fdb114c530d4b82fb57d1bc27694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fileName: file.txt
-  _prefab: {fileID: 8222176399950324474, guid: 72bfe915f58208649ac06246d2804437, type: 3}
   _matrixSize: 3
-  _colors:
-  - {r: 0.8627451, g: 0.078431375, b: 0.23529412, a: 0}
-  - {r: 0.9411765, g: 0.9019608, b: 0.54901963, a: 0}
-  - {r: 0, g: 0, b: 0.8039216, a: 0}
-  - {r: 0.5019608, g: 0, b: 0.5019608, a: 0}
-  _inputDelayMillis: 250
+  _undefinedDigitObject: {fileID: 8222176399950324474, guid: 72bfe915f58208649ac06246d2804437, type: 3}
+  _prefabs:
+  - {fileID: 8222176399950324474, guid: 91f85a271c3f5b440ba3fb4607fab393, type: 3}
+  - {fileID: 8222176399950324474, guid: ffaaebb3f6483934ca2f3c7fac26def8, type: 3}
+  - {fileID: 8222176399950324474, guid: 75cb00bf85f22914db430054f136eb91, type: 3}
+  - {fileID: 8222176399950324474, guid: 2286de776f0acc647beb6804692cb3df, type: 3}
+  _fieldReader: {fileID: 47933070}
 --- !u!4 &1823901911
 Transform:
   m_ObjectHideFlags: 0
