@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ObjectMatrixConfig
   m_EditorClassIdentifier: 
   <Size>k__BackingField: 3
-  <DistanceBetweenObjects>k__BackingField: 2
+  <DistanceBetweenObjects>k__BackingField: 1.5
   <Types>k__BackingField: 01000000020000000300000004000000
   <UndefinedObjectType>k__BackingField: 0

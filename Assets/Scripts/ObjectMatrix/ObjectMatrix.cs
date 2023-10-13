@@ -17,6 +17,8 @@ public class ObjectMatrix
     private Vector2Int _center;
     private Field _field = new();
 
+    public Action<List<Vector2Int>> Shifted;
+
     public ObjectMatrix(ObjectMatrixConfig config, UniqueObjectSpawner objectsSpawner)
     {
         _size = config.Size;
@@ -54,7 +56,8 @@ public class ObjectMatrix
         SetCenter(fieldCenterRow, fieldCenterColumn);
         
         int halfSize = _size / 2;
-        
+        List<Vector2Int> positions = new();
+
         for (int i = -halfSize; i <= halfSize; i++)
         {
             for (int j = -halfSize; j <= halfSize; j++)
@@ -67,9 +70,12 @@ public class ObjectMatrix
                 int matrixColumn = halfSize + j;
                 Vector3 spawnPosition = new Vector3(_distanceBetweenObjects * j, 0, -_distanceBetweenObjects * i);
 
+                positions.Add(new Vector2Int(newRow, newColumn));
                 TrySpawnObject(digit, matrixRow, matrixColumn, spawnPosition);
             }
         }
+        
+        Shifted?.Invoke(positions);
     }
 
     private void SetCenter(int fieldRow, int fieldColumn)

@@ -7,6 +7,8 @@ public class GameInitializer : MonoBehaviour
     [SerializeField] private ObjectMatrixConfig _matrixConfig;
     [SerializeField] private InputHandler _inputHandler;
 
+    [SerializeField] private FieldView _fieldView;
+    
     private UniqueObjectSpawner _spawner;
 
     [Inject]
@@ -24,6 +26,8 @@ public class GameInitializer : MonoBehaviour
     {
         Field field = FieldReader.ReadFrom(_fileName);
         ObjectMatrix matrix = new ObjectMatrix(_matrixConfig, _spawner);
+        
+        _fieldView.SetField(field, matrix);
        
        matrix.AttachToField(field);
        _inputHandler.SetObjectMatrix(matrix);
