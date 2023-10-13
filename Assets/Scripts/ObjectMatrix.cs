@@ -1,27 +1,35 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 using Random = UnityEngine.Random;
 
 public class ObjectMatrix : MonoBehaviour
 {
+    [SerializeField] private FieldReader _fieldReader;
+
     [SerializeField] private int _size = 3;
     [SerializeField] private float _distanceBetweenObjects = 2f;
     
     private Vector2Int _center;
 
-    [SerializeField] private GameObject _undefinedDigitObject;
-    [SerializeField] private List<GameObject> _prefabs;
+    [SerializeField] private List<UniqueObjectType> _types;
     
     private Field _field = new();
     
-    private GameObject[,] _objects;
+    private UniqueObject[,] _objects;
 
-    [SerializeField] private FieldReader _fieldReader;
+    private UniqueObjectSpawner _spawner;
+
+    [Inject]
+    private void Construct(UniqueObjectSpawner spawner)
+    {
+        _spawner = spawner;
+    }
 
     private void Start()
     {
-        _objects = new GameObject[_size, _size];
+        _objects = new UniqueObject[_size, _size];
         
         Create();
     }
@@ -73,23 +81,26 @@ public class ObjectMatrix : MonoBehaviour
 
     private void TrySetObject(int digit, int halfSize, int i, int j)
     {
-        GameObject newObject;
+        UniqueObjectType newObjectType;
 
-        if (digit > _prefabs.Count)
+        if (digit > _types.Count)
         {
             Debug.LogError($"Object for {digit} is not defined");
-            newObject = _undefinedDigitObject;
+            newObjectType = UniqueObjectType.WhiteCube;
         }
         else
         {
-            newObject = _prefabs[digit - 1];
+            newObjectType = _types[digit - 1];
         }
 
-        Destroy(_objects[halfSize + i, halfSize + j]);
+        UniqueObject oldObject = _objects[halfSize + i, halfSize + j];
+
+        if(oldObject != null && oldObject.InUse)
+            oldObject.Destroy();
+        
         _objects[halfSize + i, halfSize + j] =
-            Instantiate(newObject, 
-                new Vector3(_distanceBetweenObjects * j, 0, -_distanceBetweenObjects * i), 
-                Quaternion.identity);
+            _spawner.Spawn(newObjectType, 
+                new Vector3(_distanceBetweenObjects * j, 0, -_distanceBetweenObjects * i));
     }
     
     private void ValidateSize()

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66612a7b746b4cd3a62a0fdbd55434ed, type: 3}
+  m_Name: UniqueObjectPrefabs
+  m_EditorClassIdentifier: 
+  <WhiteCube>k__BackingField: {fileID: -8227116049843542924, guid: 72bfe915f58208649ac06246d2804437, type: 3}
+  <RedCube>k__BackingField: {fileID: -3645565792316515203, guid: 91f85a271c3f5b440ba3fb4607fab393, type: 3}
+  <YellowCube>k__BackingField: {fileID: 8074984019180945358, guid: ffaaebb3f6483934ca2f3c7fac26def8, type: 3}
+  <BlueCube>k__BackingField: {fileID: 142081134450680444, guid: 75cb00bf85f22914db430054f136eb91, type: 3}
+  <PurpleCube>k__BackingField: {fileID: -6781550830145517296, guid: 2286de776f0acc647beb6804692cb3df, type: 3}
