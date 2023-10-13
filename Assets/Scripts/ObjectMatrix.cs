@@ -1,43 +1,41 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Zenject;
 using Random = UnityEngine.Random;
 
-public class ObjectMatrix : MonoBehaviour
+public class ObjectMatrix
 {
-    [SerializeField] private FieldReader _fieldReader;
+    private readonly int _size;
+    private readonly float _distanceBetweenObjects;
 
-    [SerializeField] private int _size = 3;
-    [SerializeField] private float _distanceBetweenObjects = 2f;
+    private readonly List<UniqueObjectType> _types;
+    private readonly UniqueObjectType _undefinedObjectType;
+
+    private readonly UniqueObject[,] _objects;
     
     private Vector2Int _center;
 
-    [SerializeField] private List<UniqueObjectType> _types;
-    
+
     private Field _field = new();
-    
-    private UniqueObject[,] _objects;
-
     private UniqueObjectSpawner _spawner;
+    
 
-    [Inject]
-    private void Construct(UniqueObjectSpawner spawner)
+    public ObjectMatrix(ObjectMatrixConfig config, UniqueObjectSpawner spawner)
     {
+        _size = config.Size;
+        _distanceBetweenObjects = config.DistanceBetweenObjects;
+        _types = config.Types;
+        _undefinedObjectType = config.UndefinedObjectType;
+
         _spawner = spawner;
-    }
-
-    private void Start()
-    {
-        _objects = new UniqueObject[_size, _size];
         
-        Create();
+        _objects = new UniqueObject[_size, _size];
     }
 
-    private void Create()
+    public void AttachToField(Field field)
     {
-        _field = _fieldReader.ReadFrom();
-
+        _field = field;
+        
         ValidateSize();
         SetRandomCenter();
     }
@@ -86,7 +84,7 @@ public class ObjectMatrix : MonoBehaviour
         if (digit > _types.Count)
         {
             Debug.LogError($"Object for {digit} is not defined");
-            newObjectType = UniqueObjectType.WhiteCube;
+            newObjectType = _undefinedObjectType;
         }
         else
         {
@@ -97,10 +95,10 @@ public class ObjectMatrix : MonoBehaviour
 
         if(oldObject != null && oldObject.InUse)
             oldObject.Destroy();
-        
-        _objects[halfSize + i, halfSize + j] =
-            _spawner.Spawn(newObjectType, 
-                new Vector3(_distanceBetweenObjects * j, 0, -_distanceBetweenObjects * i));
+
+        Vector3 spawnPosition = new Vector3(_distanceBetweenObjects * j, 0, -_distanceBetweenObjects * i);
+        UniqueObject newObject = _spawner.Spawn(newObjectType,  spawnPosition);
+        _objects[halfSize + i, halfSize + j] = newObject;
     }
     
     private void ValidateSize()

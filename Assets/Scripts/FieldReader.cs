@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnityEngine;
 
-public class FieldReader : MonoBehaviour
+public class FieldReader
 {
-    [SerializeField] private string _fileName = "file.txt";
-
-    public Field ReadFrom()
+    public static Field ReadFrom(string fileName)
     {
         Field field = new();
-        using StreamReader reader = new StreamReader(_fileName);
+        using StreamReader reader = new StreamReader(fileName);
         string line;
         int column = 0;
         while ((line = reader.ReadLine()) != null)
