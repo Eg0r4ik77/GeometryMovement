@@ -170,7 +170,7 @@ MonoBehaviour:
   _fileName: file.txt
   _matrixConfig: {fileID: 11400000, guid: cef4a04782311234eb227e5b93c5ac9c, type: 2}
   _inputHandler: {fileID: 1068387411}
-  _fieldView: {fileID: 571778759}
+  _matrixOnFieldView: {fileID: 571778759}
 --- !u!1 &146277067
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,7 +331,7 @@ GameObject:
   - component: {fileID: 571778757}
   - component: {fileID: 571778759}
   m_Layer: 5
-  m_Name: FieldView
+  m_Name: MatrixOnFieldView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -352,10 +352,10 @@ RectTransform:
   m_Father: {fileID: 1586485380}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 503, y: 71}
-  m_SizeDelta: {x: 771.1293, y: 514.0425}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -261.02002, y: 0}
+  m_SizeDelta: {x: 522.0343, y: 514.0425}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &571778757
 MonoBehaviour:
@@ -466,7 +466,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0d9fd666d884e63b43ea5e93d153836, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textMeshPro: {fileID: 571778757}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -720,7 +719,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fff09524aa814ea38dd19991062badfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputDelayMillis: 250
+  _inputDelayMillis: 200
 --- !u!1 &1586485376
 GameObject:
   m_ObjectHideFlags: 0

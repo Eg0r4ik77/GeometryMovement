@@ -54,9 +54,9 @@ public class ObjectMatrix
     private void UpdateObjects(int fieldCenterRow, int fieldCenterColumn)
     {
         SetCenter(fieldCenterRow, fieldCenterColumn);
-        
+
+        List<Vector2Int> newPositions = new();
         int halfSize = _size / 2;
-        List<Vector2Int> positions = new();
 
         for (int i = -halfSize; i <= halfSize; i++)
         {
@@ -70,12 +70,12 @@ public class ObjectMatrix
                 int matrixColumn = halfSize + j;
                 Vector3 spawnPosition = new Vector3(_distanceBetweenObjects * j, 0, -_distanceBetweenObjects * i);
 
-                positions.Add(new Vector2Int(newRow, newColumn));
+                newPositions.Add(new Vector2Int(newRow, newColumn));
                 TrySpawnObject(digit, matrixRow, matrixColumn, spawnPosition);
             }
         }
         
-        Shifted?.Invoke(positions);
+        Shifted?.Invoke(newPositions);
     }
 
     private void SetCenter(int fieldRow, int fieldColumn)

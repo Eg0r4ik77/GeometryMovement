@@ -1,13 +1,14 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 using Zenject;
 
 public class GameInitializer : MonoBehaviour
 {
     [SerializeField] private string _fileName = "file.txt";
     [SerializeField] private ObjectMatrixConfig _matrixConfig;
+    
     [SerializeField] private InputHandler _inputHandler;
-
-    [SerializeField] private FieldView _fieldView;
+    [SerializeField] private MatrixOnFieldView _matrixOnFieldView;
     
     private UniqueObjectSpawner _spawner;
 
@@ -24,12 +25,14 @@ public class GameInitializer : MonoBehaviour
 
     private void InitializeGame()
     {
-        Field field = FieldReader.ReadFrom(_fileName);
+        string filePath = Path.Combine(Application.streamingAssetsPath, _fileName);
+        Field field = FieldReader.ReadFrom(filePath);
+        
         ObjectMatrix matrix = new ObjectMatrix(_matrixConfig, _spawner);
         
-        _fieldView.SetField(field, matrix);
-       
-       matrix.AttachToField(field);
+        _matrixOnFieldView.Initialize(field, matrix);
+        
+        matrix.AttachToField(field);
        _inputHandler.SetObjectMatrix(matrix);
     }
 }
