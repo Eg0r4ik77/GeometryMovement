@@ -24,8 +24,8 @@ public class GameInitializer : MonoBehaviour
     {
         Field field = FieldReader.ReadFrom(_fileName);
         ObjectMatrix matrix = new ObjectMatrix(_matrixConfig, _spawner);
-        
-        matrix.AttachToField(field);
-        _inputHandler.SetObjectMatrix(matrix);
+       
+       matrix.AttachToField(field);
+       _inputHandler.SetObjectMatrix(matrix);
     }
 }

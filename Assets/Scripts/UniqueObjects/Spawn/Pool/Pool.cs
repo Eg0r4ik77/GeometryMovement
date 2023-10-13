@@ -11,8 +11,9 @@ public abstract class Pool
         if (poolObject == null)
         {
             poolObject = Create();
-            _objects.Add(poolObject);
             poolObject.InUse = true;
+
+            _objects.Add(poolObject);
         }
         
         return poolObject;

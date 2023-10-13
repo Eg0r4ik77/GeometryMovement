@@ -10,10 +10,10 @@ public class UniqueObjectPoolsProvider
     private readonly Dictionary<UniqueObjectType, UniqueObjectPool> _pools = new();
 
     [Inject]
-    public UniqueObjectPoolsProvider(Transform root, UniqueObjectFactory uniqueObjectFactory)
+    public UniqueObjectPoolsProvider(Transform root, UniqueObjectFactory factory)
     {
         _root = root;
-        _factory = uniqueObjectFactory;
+        _factory = factory;
     }
 
     public UniqueObjectPool Get(UniqueObjectType type)
