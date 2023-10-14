@@ -18,6 +18,7 @@ public class ObjectMatrix
     private Field _field = new();
 
     public Action<List<Vector2Int>> Shifted;
+    public Action<string> ErrorThrown;
 
     public ObjectMatrix(ObjectMatrixConfig config, UniqueObjectSpawner objectsSpawner)
     {
@@ -30,7 +31,7 @@ public class ObjectMatrix
         _objects = new UniqueObject[_size, _size];
     }
 
-    public void AttachToField(Field field)
+    public void AttachField(Field field)
     {
         _field = field;
         
@@ -102,7 +103,7 @@ public class ObjectMatrix
 
         if (digit > _types.Count)
         {
-            Debug.LogError($"Object for {digit} is not defined");
+            ErrorThrown?.Invoke("Objects are not defined for all digits");
             newObjectType = _undefinedObjectType;
         }
         else
@@ -118,18 +119,24 @@ public class ObjectMatrix
     {
         if (_size % 2 == 0)
         {
-            throw new Exception("the matrix size must be an odd number");
+            ThrowException("The matrix size must be an odd number");
         }
 
         if (_size > _field.ColumnCount)
         {
-            throw new Exception("There are more matrix columns than field columns");
+            ThrowException($"There are more matrix columns ({_size}) than field columns");
         }
 
         if (_size > _field.RowCount)
         {
-            throw new Exception("There are more matrix rows than field rows");
+            ThrowException($"There are more matrix rows ({_size}) than field rows");
         }
+    }
+    
+    private void ThrowException(string message)
+    {
+        ErrorThrown?.Invoke(message);
+        throw new Exception(message);
     }
 
     private int GetCycledIndex(int index, int count) => (index % count + count) % count;

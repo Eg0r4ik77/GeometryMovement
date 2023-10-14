@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnityEngine;
 
 public class FieldReader
 {
-    public static Field ReadFrom(string fileName)
+    public Action<string> ErrorThrown;
+    
+    public Field ReadFrom(string fileName)
     {
         using StreamReader reader = new StreamReader(fileName);
         Field field = new();
 
-        if (IsEmptyFile(reader))
-            return null;
-        
+        ValidateFileForEmptiness(reader);
+
         while (reader.ReadLine() is {} line)
         {
             int rowNumber = field.RowCount + 1;
@@ -26,18 +26,15 @@ public class FieldReader
         return field;
     }
 
-    private static bool IsEmptyFile(StreamReader reader)
+    private void ValidateFileForEmptiness(StreamReader reader)
     {
         if (reader.Peek() == -1)
         {
-            Debug.LogError("File must not be empty");
-            return true;
+            ThrowException("File must not be empty");
         }
-
-        return false;
     }
     
-    private static List<int> ConvertLineToDigitsRow(string line)
+    private List<int> ConvertLineToDigitsRow(string line)
     {
         List<int> row = line
             .Select(number => Convert.ToInt32(Char.GetNumericValue(number)))
@@ -45,37 +42,43 @@ public class FieldReader
         return row;
     }
 
-    private static void ValidateRow(string row, int rowNumber, Field field)
+    private void ValidateRow(string row, int rowNumber, Field field)
     {
         ValidateForPositiveDigits(row, rowNumber);
         ValidateForNonEmptyRow(row, rowNumber);
         ValidateForSameRowsLength(row, rowNumber, field);
     }
 
-    private static void ValidateForPositiveDigits(string line, int rowNumber)
+    private void ValidateForPositiveDigits(string line, int rowNumber)
     {
         foreach (char character in line)
         {
             if (!(char.IsDigit(character) && character > '0'))
             {
-                throw new Exception($"{rowNumber}: all characters must be positive digits");
+                ThrowException($"({rowNumber}): All characters must be positive digits");
             }
         }
     }
     
-    private static void ValidateForNonEmptyRow(string line, int rowNumber)
+    private void ValidateForNonEmptyRow(string line, int rowNumber)
     {
         if (line.Length == 0)
         {
-            throw new Exception($"{rowNumber}: the row must not be empty");
+            ThrowException($"({rowNumber}): The row must not be empty");
         }
     }
     
-    private static void ValidateForSameRowsLength(string line, int rowNumber, Field field)
+    private void ValidateForSameRowsLength(string line, int rowNumber, Field field)
     {
         if (field.RowCount > 0 && field.ColumnCount != line.Length)
         {
-            throw new Exception($"{rowNumber}: the rows must have the same length");
+            ThrowException($"({rowNumber}): The rows must have the same length");
         }
+    }
+
+    private void ThrowException(string message)
+    {
+        ErrorThrown?.Invoke(message);
+        throw new Exception(message);
     }
 }

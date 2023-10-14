@@ -23,6 +23,16 @@ public class MatrixOnFieldView : MonoBehaviour
         _textMeshPro = GetComponent<TextMeshProUGUI>();
     }
 
+    private void OnEnable()
+    {
+        _textMeshPro.enabled = true;
+    }
+
+    private void OnDisable()
+    {
+        _textMeshPro.enabled = false;
+    }
+
     private void OnDestroy()
     {
         if (_matrix != null)

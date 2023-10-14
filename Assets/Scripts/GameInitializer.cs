@@ -8,7 +8,9 @@ public class GameInitializer : MonoBehaviour
     [SerializeField] private ObjectMatrixConfig _matrixConfig;
     
     [SerializeField] private InputHandler _inputHandler;
+    
     [SerializeField] private MatrixOnFieldView _matrixOnFieldView;
+    [SerializeField] private FileErrorMessageView _errorMessageView;
     
     private UniqueObjectSpawner _spawner;
 
@@ -25,14 +27,17 @@ public class GameInitializer : MonoBehaviour
 
     private void InitializeGame()
     {
-        string filePath = Path.Combine(Application.streamingAssetsPath, _fileName);
-        Field field = FieldReader.ReadFrom(filePath);
-        
+        FieldReader fieldReader = new FieldReader();
         ObjectMatrix matrix = new ObjectMatrix(_matrixConfig, _spawner);
         
-        _matrixOnFieldView.Initialize(field, matrix);
+        _errorMessageView.Initialize(fieldReader, matrix);
+
+        string filePath = Path.Combine(Application.streamingAssetsPath, _fileName);
+        Field field = fieldReader.ReadFrom(filePath);
         
-        matrix.AttachToField(field);
+        _matrixOnFieldView.Initialize(field, matrix);
+
+        matrix.AttachField(field);
        _inputHandler.SetObjectMatrix(matrix);
     }
 }
